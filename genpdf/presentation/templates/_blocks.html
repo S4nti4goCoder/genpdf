@@ -1,0 +1,74 @@
+{#
+  Macros that paint domain blocks as HTML. Shared by document.html and deck.html.
+  Each node carries `kind`, set in genpdf/domain/blocks.py.
+#}
+
+{% macro inlines(nodes) -%}
+{%- for n in nodes -%}
+{%- if n.kind == "text" -%}{{ n.text }}
+{%- elif n.kind == "strong" -%}<strong>{{ inlines(n.children) }}</strong>
+{%- elif n.kind == "emphasis" -%}<em>{{ inlines(n.children) }}</em>
+{%- elif n.kind == "strike" -%}<s>{{ inlines(n.children) }}</s>
+{%- elif n.kind == "code" -%}<code>{{ n.text }}</code>
+{%- elif n.kind == "link" -%}<a href="{{ n.href }}">{{ inlines(n.children) }}</a>
+{%- elif n.kind == "image" -%}<img class="inline-image" src="{{ n.src }}" alt="{{ n.alt }}">
+{%- elif n.kind == "break" -%}<br>
+{%- elif n.kind == "raw" -%}{{ n.html | safe }}
+{%- endif -%}
+{%- endfor -%}
+{%- endmacro %}
+
+{% macro cell(tag, c) -%}
+<{{ tag }}{% if c.align %} style="text-align: {{ c.align }}"{% endif %}>{{ inlines(c.children) }}</{{ tag }}>
+{%- endmacro %}
+
+{% macro table(b) -%}
+<table{% if b.caption %} class="numbered"{% endif %}>
+{% if b.caption %}<caption>{{ inlines(b.caption) }}</caption>{% endif %}
+<thead><tr>{% for c in b.header %}{{ cell("th", c) }}{% endfor %}</tr></thead>
+<tbody>
+{% for row in b.rows %}
+<tr>{% for c in row %}{{ cell("td", c) }}{% endfor %}</tr>
+{% endfor %}
+</tbody>
+</table>
+{%- endmacro %}
+
+{% macro block(b) -%}
+{%- if b.kind == "heading" -%}
+<h{{ b.level }} id="{{ b.anchor }}">{{ inlines(b.children) }}</h{{ b.level }}>
+{%- elif b.kind == "paragraph" -%}
+<p>{{ inlines(b.children) }}</p>
+{%- elif b.kind == "list" -%}
+{%- set tag = "ol" if b.ordered else "ul" -%}
+{# WeasyPrint ignores the start attribute, so the list-item counter is reset by hand. #}
+<{{ tag }}{% if b.ordered and b.start != 1 %} start="{{ b.start }}" style="counter-reset: list-item {{ b.start - 1 }}"{% endif %}>
+{% for item in b.items %}
+<li>{% for child in item.blocks %}{{ block(child) }}{% endfor %}</li>
+{% endfor %}
+</{{ tag }}>
+{%- elif b.kind == "table" -%}
+{{ table(b) }}
+{%- elif b.kind == "codeblock" -%}
+<pre class="code"{% if b.language %} data-lang="{{ b.language }}"{% endif %}><code>{{ b.code }}</code></pre>
+{%- elif b.kind == "figure" -%}
+<figure{% if b.caption %} class="numbered"{% endif %}>
+<img src="{{ b.src }}" alt="{{ b.alt }}">
+{% if b.caption %}<figcaption>{{ b.caption }}</figcaption>{% endif %}
+</figure>
+{%- elif b.kind == "quote" -%}
+<blockquote>{% for child in b.blocks %}{{ block(child) }}{% endfor %}</blockquote>
+{%- elif b.kind == "rule" -%}
+<hr>
+{%- elif b.kind == "pagebreak" -%}
+<div class="page-break"></div>
+{%- elif b.kind == "raw" -%}
+{{ b.html | safe }}
+{%- endif -%}
+{%- endmacro %}
+
+{% macro blocks(items) -%}
+{% for b in items %}
+{{ block(b) }}
+{% endfor %}
+{%- endmacro %}

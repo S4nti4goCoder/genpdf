@@ -1,0 +1,80 @@
+{#
+  One macro per slide kind. deck.html picks the macro by slide.kind.
+  Text that ends up in the PDF comes from the .md; these macros only add structure.
+#}
+{% from "_blocks.html" import blocks, inlines %}
+
+{% macro heading(slide, tag="h2") -%}
+{% if slide.kicker %}<p class="kicker">{{ inlines(slide.kicker) }}</p>{% endif %}
+{% if slide.title %}<{{ tag }} class="title">{{ inlines(slide.title) }}</{{ tag }}>{% endif %}
+{%- endmacro %}
+
+{% macro icon_badge(name, icons) -%}
+{% if name %}<div class="icon">{{ icons[name] }}</div>{% endif %}
+{%- endmacro %}
+
+{% macro cover(slide, meta, icons) -%}
+<div class="cover">
+  {{ heading(slide, "h1") }}
+  <div class="lead">{{ blocks(slide.blocks) }}</div>
+  {% if meta.author or meta.date %}
+  <p class="cover__meta">
+    {% if meta.author %}<span>{{ meta.author }}</span>{% endif %}
+    {% if meta.author and meta.date %}<span class="dot"></span>{% endif %}
+    {% if meta.date %}<span>{{ meta.date }}</span>{% endif %}
+  </p>
+  {% endif %}
+</div>
+{%- endmacro %}
+
+{% macro cards(slide, meta, icons) -%}
+{{ heading(slide) }}
+{% if slide.blocks %}<div class="lead">{{ blocks(slide.blocks) }}</div>{% endif %}
+<div class="cards cards--{{ slide.sections | length }}">
+  {% for card in slide.sections %}
+  <article class="card">
+    {{ icon_badge(card.icon, icons) }}
+    {% if card.heading %}<h3>{{ inlines(card.heading) }}</h3>{% endif %}
+    {{ blocks(card.blocks) }}
+  </article>
+  {% endfor %}
+</div>
+{%- endmacro %}
+
+{% macro bullets(slide, meta, icons) -%}
+{{ heading(slide) }}
+<div class="body">{{ blocks(slide.blocks) }}</div>
+{%- endmacro %}
+
+{% macro two_columns(slide, meta, icons) -%}
+{{ heading(slide) }}
+<div class="columns">
+  {% for column in slide.sections %}
+  <div class="column">
+    {{ icon_badge(column.icon, icons) }}
+    {% if column.heading %}<h3>{{ inlines(column.heading) }}</h3>{% endif %}
+    {{ blocks(column.blocks) }}
+  </div>
+  {% endfor %}
+</div>
+{%- endmacro %}
+
+{% macro quote(slide, meta, icons) -%}
+{{ heading(slide) }}
+<div class="quote">{{ blocks(slide.blocks) }}</div>
+{%- endmacro %}
+
+{% macro full_image(slide, meta, icons) -%}
+{{ heading(slide) }}
+<figure class="stage">
+  <img src="{{ slide.image.src }}" alt="{{ slide.image.alt }}">
+</figure>
+{% if slide.blocks %}<div class="caption">{{ blocks(slide.blocks) }}</div>{% endif %}
+{%- endmacro %}
+
+{% macro closing(slide, meta, icons) -%}
+<div class="closing">
+  {{ heading(slide, "h1") }}
+  <div class="lead">{{ blocks(slide.blocks) }}</div>
+</div>
+{%- endmacro %}

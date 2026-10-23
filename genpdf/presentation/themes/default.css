@@ -1,0 +1,21 @@
+/* Default: midnight indigo with teal and pink accents. Variables only. */
+:root {
+  --bg: #0b0d17;
+  --surface: #141827;
+  --border: #262c42;
+  --text: #c7cbe0;
+  --text-strong: #f5f6fb;
+  --muted: #8a90ab;
+
+  --accent: #8b9cff;
+  --accent-2: #2dd4bf;
+  --accent-3: #f472b6;
+  --accent-4: #fbbf24;
+
+  --glow-a: #4f46e5;
+  --glow-b: #db2777;
+  --glow-opacity: 0.38;
+
+  --font-sans: "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", Consolas, monospace;
+}

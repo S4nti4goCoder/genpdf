@@ -1,0 +1,36 @@
+# Entorno virtual de Python (cada persona lo crea con `python -m venv .venv`)
+.venv/
+venv/
+
+# Código compilado y cachés de Python y de las herramientas
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Artefactos de empaquetado
+build/
+dist/
+*.egg-info/
+
+# PDF generados (se regeneran con `python -m genpdf build`)
+output/
+
+# Variables de entorno y secretos locales
+.env
+.env.*
+
+# Configuración local de editores
+.vscode/
+.idea/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Registros
+*.log

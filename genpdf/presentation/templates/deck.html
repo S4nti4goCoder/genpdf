@@ -1,0 +1,32 @@
+{% import "_slides.html" as kinds %}
+<!doctype html>
+<html lang="{{ meta.lang }}">
+<head>
+<meta charset="utf-8">
+<base href="{{ base_href }}">
+<title>{{ meta.title }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=block">
+<style>{{ theme_css | safe }}</style>
+<style>{{ css | safe }}</style>
+</head>
+<body>
+{% for slide in deck.slides %}
+{% set macro_name = slide.kind.value | replace("-", "_") %}
+<section class="slide slide--{{ slide.kind.value }}">
+  <div class="glow glow--a"></div>
+  <div class="glow glow--b"></div>
+  <div class="slide__content">
+    {{ kinds[macro_name](slide, meta, icons) }}
+  </div>
+  {% if slide.kind.value != "cover" %}
+  <footer class="slide__footer">
+    <span>{{ meta.title }}</span>
+    <span class="slide__number">{{ "%02d" | format(slide.number) }}</span>
+  </footer>
+  {% endif %}
+</section>
+{% endfor %}
+</body>
+</html>

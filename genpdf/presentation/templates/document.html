@@ -1,0 +1,81 @@
+{% from "_blocks.html" import blocks, inlines %}
+<!doctype html>
+<html lang="{{ meta.lang }}">
+<head>
+<meta charset="utf-8">
+<title>{{ meta.title }}</title>
+<style>{{ css | safe }}</style>
+<style>@page { @top-left { content: "{{ meta.title | css_string }}"; } }</style>
+</head>
+<body>
+
+{% if meta.cover %}
+<section class="cover">
+  {# Flat illustration of stacked pages. Solid colors only. #}
+  <svg class="cover__art" viewBox="0 0 300 330" xmlns="http://www.w3.org/2000/svg">
+    <rect x="96" y="0" width="200" height="250" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+    <rect x="96" y="0" width="200" height="14" rx="7" fill="#8957e5"/>
+    <rect x="48" y="40" width="200" height="250" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+    <rect x="48" y="40" width="200" height="14" rx="7" fill="#3fb950"/>
+    <rect x="0" y="80" width="200" height="250" rx="14" fill="#1c2128" stroke="#444c56" stroke-width="2"/>
+    <rect x="24" y="108" width="72" height="12" rx="6" fill="#1f6feb"/>
+    <rect x="24" y="140" width="152" height="8" rx="4" fill="#444c56"/>
+    <rect x="24" y="158" width="132" height="8" rx="4" fill="#444c56"/>
+    <rect x="24" y="176" width="144" height="8" rx="4" fill="#444c56"/>
+    <rect x="24" y="206" width="70" height="56" rx="6" fill="#30363d"/>
+    <rect x="106" y="206" width="70" height="8" rx="4" fill="#444c56"/>
+    <rect x="106" y="224" width="58" height="8" rx="4" fill="#444c56"/>
+    <rect x="106" y="242" width="64" height="8" rx="4" fill="#444c56"/>
+    <rect x="24" y="282" width="152" height="8" rx="4" fill="#444c56"/>
+    <rect x="24" y="300" width="96" height="8" rx="4" fill="#444c56"/>
+  </svg>
+  <div class="cover__heading">
+    <h1 class="cover__title">{{ meta.title }}</h1>
+    {% if meta.subtitle %}<p class="cover__subtitle">{{ meta.subtitle }}</p>{% endif %}
+  </div>
+  {% if meta.author or meta.date %}
+  <div class="cover__meta">
+    {% if meta.author %}
+    <div class="cover__field">
+      <p class="cover__label">Autor</p>
+      <p class="cover__value">{{ meta.author }}</p>
+    </div>
+    {% endif %}
+    {% if meta.date %}
+    <div class="cover__field">
+      <p class="cover__label">Fecha</p>
+      <p class="cover__value">{{ meta.date }}</p>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+</section>
+{% else %}
+<header class="doc-header">
+  <p class="doc-header__title">{{ meta.title }}</p>
+  {% if meta.subtitle %}<p class="doc-header__subtitle">{{ meta.subtitle }}</p>{% endif %}
+  {% if meta.author or meta.date %}
+  <p class="doc-header__meta">
+    {{ meta.author }}{% if meta.author and meta.date %} · {% endif %}{{ meta.date }}
+  </p>
+  {% endif %}
+</header>
+{% endif %}
+
+{% if meta.toc %}
+<nav class="toc">
+  <h2 class="toc__title">Contenido</h2>
+  <ul>
+  {% for entry in toc %}
+    <li class="toc__item toc__item--{{ entry.level }}"><a href="#{{ entry.anchor }}">{{ inlines(entry.children) }}</a></li>
+  {% endfor %}
+  </ul>
+</nav>
+{% endif %}
+
+<main class="content{% if meta.toc %} content--after-toc{% endif %}">
+{{ blocks(document.blocks) }}
+</main>
+
+</body>
+</html>

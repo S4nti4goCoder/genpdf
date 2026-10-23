@@ -1,0 +1,21 @@
+/* GitHub dark: the real GitHub dark-mode palette. Variables only; structure is in deck.css. */
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --border: #30363d;
+  --text: #c9d1d9;
+  --text-strong: #f0f6fc;
+  --muted: #8b949e;
+
+  --accent: #58a6ff;
+  --accent-2: #3fb950;
+  --accent-3: #bc8cff;
+  --accent-4: #d29922;
+
+  --glow-a: #1f6feb;
+  --glow-b: #8957e5;
+  --glow-opacity: 0.42;
+
+  --font-sans: "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", Consolas, monospace;
+}

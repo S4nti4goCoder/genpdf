@@ -1,0 +1,21 @@
+# Project metadata and tool configuration (ruff, pytest).
+# Pinned dependencies live in requirements*.txt.
+
+[project]
+name = "genpdf"
+version = "1.0.0"
+description = "Generates PDF documents and slide decks from Markdown with frontmatter."
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+# E/W: style, F: real errors, I: import order, UP: modern syntax,
+# B: common bugs, SIM: simplifications, N: naming, RUF: ruff-specific rules.
+select = ["E", "W", "F", "I", "UP", "B", "SIM", "N", "RUF"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

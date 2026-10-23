@@ -1,0 +1,382 @@
+/*
+  Document layout for WeasyPrint: A4, paged media.
+  Labels inside content: "..." are Spanish on purpose, because they end up in the PDF.
+  @page boxes use literal values: custom properties are not reliable inside margin boxes.
+*/
+
+:root {
+  --ink: #1f2328;
+  --ink-strong: #0d1117;
+  --muted: #59636e;
+  --accent: #1f6feb;
+  --rule: #d1d9e0;
+  --code-bg: #f6f8fa;
+  --code-inline-bg: #eff1f3;
+  --quote-bg: #f6f8fa;
+  --table-head: #f0f3f6;
+}
+
+/* ── Pages ──────────────────────────────────────────────────────────────────── */
+
+@page {
+  size: A4;
+  margin: 2.5cm;
+
+  @top-left {
+    font: 8.5pt "Segoe UI", sans-serif;
+    color: #59636e;
+    vertical-align: bottom;
+    padding-bottom: 8pt;
+  }
+  @top-right {
+    content: string(chapter);
+    font: 8.5pt "Segoe UI", sans-serif;
+    color: #59636e;
+    vertical-align: bottom;
+    padding-bottom: 8pt;
+  }
+  @bottom-center {
+    content: "Página " counter(page) " de " counter(pages);
+    font: 8.5pt "Segoe UI", sans-serif;
+    color: #59636e;
+    vertical-align: top;
+    padding-top: 8pt;
+  }
+}
+
+/* The first page already shows the title in large type; no running header there. */
+@page :first {
+  @top-left { content: none; }
+}
+
+@page cover {
+  margin: 0;
+  @top-left { content: none; }
+  @top-right { content: none; }
+  @bottom-center { content: none; }
+}
+
+/* ── Base ───────────────────────────────────────────────────────────────────── */
+
+html {
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  font-size: 11pt;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+body { margin: 0; }
+
+p {
+  margin: 0 0 0.75em;
+  orphans: 3;
+  widows: 3;
+  hyphens: auto;
+}
+
+a { color: var(--accent); text-decoration: none; }
+
+strong { font-weight: 700; color: var(--ink-strong); }
+
+/* ── Cover ──────────────────────────────────────────────────────────────────── */
+
+/* Flat, solid dark cover: illustration top right, title bottom left. No gradients. */
+.cover {
+  page: cover;
+  break-after: page;
+  position: relative;
+  height: 297mm;
+  background: #0d1117;
+}
+
+.cover__art {
+  position: absolute;
+  top: 2.5cm;
+  right: 2.5cm;
+  width: 8.2cm;
+  height: 9cm;
+}
+
+.cover__heading {
+  position: absolute;
+  left: 2.5cm;
+  right: 2.5cm;
+  bottom: 6.2cm;
+}
+
+.cover__title {
+  margin: 0 0 0.3em;
+  font-size: 54pt;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #f0f6fc;
+  border: 0;
+  string-set: none;
+  hyphens: none;
+}
+
+.cover__subtitle {
+  max-width: 13.5cm;
+  margin: 0;
+  font-size: 14pt;
+  font-weight: 400;
+  line-height: 1.45;
+  color: #8b949e;
+  hyphens: none;
+}
+
+.cover__meta {
+  position: absolute;
+  left: 2.5cm;
+  right: 2.5cm;
+  bottom: 2.5cm;
+  padding-top: 0.9cm;
+  border-top: 0.75pt solid #30363d;
+}
+
+.cover__field {
+  display: inline-block;
+  width: 48%;
+  vertical-align: top;
+}
+
+.cover__label {
+  margin: 0 0 0.3em;
+  font-size: 8pt;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.cover__value { margin: 0; font-size: 12pt; font-weight: 600; color: #f0f6fc; }
+
+/* ── Header (documents without a cover) ─────────────────────────────────────── */
+
+.doc-header {
+  margin-bottom: 1.8em;
+  padding-bottom: 0.9em;
+  border-bottom: 1.5pt solid var(--accent);
+}
+
+.doc-header__title {
+  margin: 0;
+  font-size: 24pt;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ink-strong);
+  hyphens: none;
+}
+
+.doc-header__subtitle { margin: 0.25em 0 0; font-size: 13pt; color: var(--muted); }
+.doc-header__meta { margin: 0.5em 0 0; font-size: 9.5pt; color: var(--muted); }
+
+/* ── Table of contents ──────────────────────────────────────────────────────── */
+
+.toc { break-after: page; }
+
+.toc__title {
+  margin: 0 0 1.2em;
+  font-size: 22pt;
+  border: 0;
+}
+
+.toc ul { list-style: none; margin: 0; padding: 0; }
+
+.toc__item { margin: 0.18em 0; }
+.toc__item a { color: var(--ink); }
+
+.toc__item a::after {
+  content: leader(".") target-counter(attr(href), page);
+  color: var(--muted);
+}
+
+.toc__item--1 { margin-top: 0.7em; font-weight: 600; }
+.toc__item--1 a { color: var(--ink-strong); }
+.toc__item--2 { padding-left: 1.3em; }
+.toc__item--3 { padding-left: 2.6em; font-size: 10pt; }
+.toc__item--4 { padding-left: 3.9em; font-size: 10pt; }
+
+/* ── Headings ───────────────────────────────────────────────────────────────── */
+
+h1, h2, h3, h4 {
+  line-height: 1.25;
+  color: var(--ink-strong);
+  hyphens: none;
+  break-after: avoid;
+  break-inside: avoid;
+}
+
+.content h1 {
+  break-before: page;
+  string-set: chapter content();
+  margin: 0 0 0.9em;
+  padding-bottom: 0.3em;
+  font-size: 22pt;
+  font-weight: 700;
+  border-bottom: 1.5pt solid var(--accent);
+}
+
+/* Without a cover or index, the first chapter starts right under the header. */
+.doc-header + .content > h1:first-child { break-before: auto; }
+
+h2 { margin: 1.6em 0 0.5em; font-size: 15pt; font-weight: 600; }
+h3 { margin: 1.3em 0 0.4em; font-size: 12.5pt; font-weight: 600; }
+h4 {
+  margin: 1.2em 0 0.3em;
+  font-size: 10.5pt;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.content > h2:first-child, .content > h3:first-child { margin-top: 0; }
+
+/* ── Lists ──────────────────────────────────────────────────────────────────── */
+
+ul, ol { margin: 0 0 0.75em; padding-left: 1.4em; }
+li { margin: 0.2em 0; }
+li > p { margin: 0; }
+li > ul, li > ol { margin: 0.2em 0 0.3em; }
+li::marker { color: var(--muted); }
+
+/* ── Code ───────────────────────────────────────────────────────────────────── */
+
+code {
+  font-family: Consolas, "Cascadia Mono", monospace;
+  font-size: 0.9em;
+  hyphens: none;
+}
+
+p code, li code, td code, th code, blockquote code {
+  padding: 0.05em 0.3em;
+  background: var(--code-inline-bg);
+  border-radius: 3pt;
+}
+
+pre.code {
+  margin: 0.4em 0 1.1em;
+  padding: 9pt 11pt;
+  background: var(--code-bg);
+  border: 0.5pt solid var(--rule);
+  border-radius: 4pt;
+  font-family: Consolas, "Cascadia Mono", monospace;
+  font-size: 8.75pt;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  hyphens: none;
+  /* Keep a block whole when it fits on a page; longer ones still break. */
+  break-inside: avoid;
+  orphans: 3;
+  widows: 3;
+}
+
+pre.code code { font-size: inherit; }
+
+pre.code[data-lang]::before {
+  content: attr(data-lang);
+  display: block;
+  margin-bottom: 5pt;
+  font: 600 7pt "Segoe UI", sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── Tables ─────────────────────────────────────────────────────────────────── */
+
+table {
+  width: 100%;
+  margin: 0.6em 0 1.3em;
+  border-collapse: collapse;
+  font-size: 9.5pt;
+  line-height: 1.4;
+}
+
+/* Repeats the header row when the table breaks across pages. */
+thead { display: table-header-group; }
+
+tr { break-inside: avoid; }
+
+th, td {
+  padding: 5pt 7pt;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 0.5pt solid var(--rule);
+}
+
+th {
+  font-weight: 700;
+  color: var(--ink-strong);
+  background: var(--table-head);
+  border-bottom: 1pt solid #8c959f;
+}
+
+caption {
+  caption-side: top;
+  margin-bottom: 5pt;
+  text-align: left;
+  font-size: 9pt;
+  color: var(--muted);
+  break-after: avoid;
+}
+
+table.numbered { counter-increment: table; }
+
+table.numbered caption::before {
+  content: "Tabla " counter(table) ". ";
+  font-weight: 700;
+  color: var(--ink-strong);
+}
+
+/* ── Figures ────────────────────────────────────────────────────────────────── */
+
+figure {
+  margin: 1.2em 0 1.4em;
+  text-align: center;
+  break-inside: avoid;
+}
+
+figure img {
+  max-width: 100%;
+  max-height: 20cm;
+}
+
+figcaption {
+  margin-top: 6pt;
+  font-size: 9pt;
+  color: var(--muted);
+}
+
+figure.numbered { counter-increment: figure; }
+
+figure.numbered figcaption::before {
+  content: "Figura " counter(figure) ". ";
+  font-weight: 700;
+  color: var(--ink-strong);
+}
+
+.inline-image { height: 1.1em; vertical-align: -0.2em; }
+
+/* ── Quotes, rules, breaks ──────────────────────────────────────────────────── */
+
+blockquote {
+  margin: 1em 0 1.2em;
+  padding: 0.7em 1.1em;
+  background: var(--quote-bg);
+  border-left: 3pt solid var(--accent);
+  color: #31373d;
+  break-inside: avoid;
+}
+
+blockquote p:last-child { margin-bottom: 0; }
+
+hr {
+  margin: 1.6em 0;
+  border: 0;
+  border-top: 0.75pt solid var(--rule);
+}
+
+.page-break { break-after: page; }

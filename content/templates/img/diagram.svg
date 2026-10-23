@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="260" viewBox="0 0 900 260" font-family="Inter, Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10z" fill="#8c959f"/>
+    </marker>
+  </defs>
+  <g text-anchor="middle">
+    <rect x="20" y="50" width="220" height="160" rx="18" fill="#ddf4ff" stroke="#54aeff" stroke-width="2"/>
+    <text x="130" y="122" font-size="26" font-weight="700" fill="#0a3069">archivo.md</text>
+    <text x="130" y="154" font-size="17" fill="#0a3069">texto + frontmatter</text>
+
+    <rect x="340" y="50" width="220" height="160" rx="18" fill="#fbefff" stroke="#c297ff" stroke-width="2"/>
+    <text x="450" y="122" font-size="26" font-weight="700" fill="#512a97">genpdf</text>
+    <text x="450" y="154" font-size="17" fill="#512a97">plantilla + estilos</text>
+
+    <rect x="660" y="50" width="220" height="160" rx="18" fill="#dafbe1" stroke="#4ac26b" stroke-width="2"/>
+    <text x="770" y="122" font-size="26" font-weight="700" fill="#044f1e">archivo.pdf</text>
+    <text x="770" y="154" font-size="17" fill="#044f1e">listo para entregar</text>
+  </g>
+  <g stroke="#8c959f" stroke-width="3" fill="none" marker-end="url(#arrow)">
+    <path d="M246 130 H334"/>
+    <path d="M566 130 H654"/>
+  </g>
+</svg>
